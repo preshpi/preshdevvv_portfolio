@@ -10,11 +10,12 @@ import { client } from "../../client";
 const Projects = () => {
   const controls = useAnimationHook();
   const [projectData, setProjectData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     client
       .fetch(
-        `*[_type == "allproject"]{
+        `*[_type == "allproject"] | order(_createdAt desc) {
       title,
       subtitle,
       language,
@@ -28,71 +29,82 @@ const Projects = () => {
         alt}
     }`
       )
-      .then((data) => setProjectData(data))
-
+      .then((data) => {
+        setProjectData(data);
+        setLoading(false);
+      })
       .catch(console.error);
   }, []);
   return (
     <motion.div
-      className="py-12 px-5 overflow-y-auto lg:h-[450px] md:grid-cols-2 lg:grid-cols-1 grid"
+      className="py-12 lg:px-5 px-12 overflow-y-auto gap-5 lg:h-[450px] md:grid-cols-2 lg:grid-cols-1 grid"
       initial={{ opacity: 0 }}
       animate={controls}
       exit={{ opacity: 0, transition: { ease: "easeInOut" } }}
     >
-      {projectData.map((projectData, index) => (
-        <div className="mb-[24px]" key={index}>
-          <motion.div
-            className="rounded lg:overflow-hidden shadow-lg w-80 h-full mx-auto bg-white dark:bg-secondary"
-            key={index}
-          >
-            {projectData.mainImage && (
-              <LazyLoadImage
-                src={projectData.mainImage.asset.url}
-                alt={projectData.mainImage.alt}
-                placeholderSrc={projectData.mainImage.asset.url}
-                effect="blur"
-              />
-            )}
-
-            <div className="p-5 ">
-              <div className="font-[500] text-[18px] leading-[22.97px] mt-[12px] text-black2 dark:text-white">
-                {projectData.title}
-              </div>
-              <p className="text-gray text-[14px] mt-2 leading-[20.42px]">
-                {projectData.subtitle}
-              </p>
-              <p className="mt-[12px] text-[#222222] dark:text-white2">
-                {projectData.language}
-              </p>
-              <div className="mt-[12px] flex gap-[30px]">
-                <span className="flex justify-center items-center cursor-pointer gap-[8px] text-black2 text-[14px] hover:opacity-75  hover:scale-110 transistion-all duration-500">
-                  <>
-                    <TbBrandGithub className="dark:fill-white fill-black2" />
-                    <a
-                      href={projectData.codeLink}
-                      target="_blank"
-                      className="dark:text-gray"
-                    >
-                      Code
-                    </a>
-                  </>
-                </span>
-
-                <span className="flex justify-center items-center cursor-pointer gap-[8px] text-black2 text-[14px] hover:opacity-75 hover:scale-110 transistion-all duration-500">
-                  <AiFillEye className="dark:text-white" />
-                  <a
-                    href={projectData.viewLink}
-                    target="_blank"
-                    className="dark:text-gray"
-                  >
-                    View
-                  </a>
-                </span>
-              </div>
+      {loading
+        ? [1, 2, 3, 4, 5, 6].map((index) => (
+            <div className="skeleton-loader" key={index}>
+              <div className="skeleton-image"></div>
+              <div className="skeleton-text"></div>
+              <div className="skeleton-text"></div>
+              <div className="skeleton-text"></div>
             </div>
-          </motion.div>
-        </div>
-      ))}
+          ))
+        : projectData.map((projectData, index) => (
+            <div className="mb-[24px]" key={index}>
+              <motion.div
+                className="rounded lg:overflow-hidden shadow-lg w-full lg:w-80 h-full mx-auto bg-white dark:bg-secondary"
+                key={index}
+              >
+                {projectData.mainImage && (
+                  <LazyLoadImage
+                    src={projectData.mainImage.asset.url}
+                    alt={projectData.mainImage.alt}
+                    placeholderSrc={projectData.mainImage.asset.url}
+                    effect="blur"
+                  />
+                )}
+
+                <div className="p-5 ">
+                  <div className="font-[500] text-[18px] leading-[22.97px] mt-[12px] text-black2 dark:text-white">
+                    {projectData.title}
+                  </div>
+                  <p className="text-gray text-[14px] mt-2 leading-[20.42px]">
+                    {projectData.subtitle}
+                  </p>
+                  <p className="mt-[12px] text-[#222222] dark:text-white2">
+                    {projectData.language}
+                  </p>
+                  <div className="mt-[12px] flex gap-[30px]">
+                    <span className="flex justify-center items-center cursor-pointer gap-[8px] text-black2 text-[14px] hover:opacity-75  hover:scale-110 transistion-all duration-500">
+                      <>
+                        <TbBrandGithub className="dark:fill-white fill-black2" />
+                        <a
+                          href={projectData.codeLink}
+                          target="_blank"
+                          className="dark:text-gray"
+                        >
+                          Code
+                        </a>
+                      </>
+                    </span>
+
+                    <span className="flex justify-center items-center cursor-pointer gap-[8px] text-black2 text-[14px] hover:opacity-75 hover:scale-110 transistion-all duration-500">
+                      <AiFillEye className="dark:text-white" />
+                      <a
+                        href={projectData.viewLink}
+                        target="_blank"
+                        className="dark:text-gray"
+                      >
+                        View
+                      </a>
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          ))}
     </motion.div>
   );
 };

@@ -5,18 +5,18 @@ const Navbar = () => {
     { name: "About", path: "/" },
     { name: "Skills", path: "/skills" },
     { name: "Projects", path: "/projects" },
-    { name: "Blog", path: "https://preshblog.vercel.app/", external: true },
-    {
-      name: "Video",
-      path: "https://preshpie.notion.site/Video-Editing-Portfolio-ea5a25af009a4423a444f0793132f244?pvs=4",
-      external: true,
-    },
+    // {
+    //   name: "Video",
+    //   path: "https://preshpie.notion.site/Video-Editing-Portfolio-ea5a25af009a4423a444f0793132f244?pvs=4",
+    //   external: true,
+    // },
     { name: "Contact", path: "/contact" },
+    { name: "Blog", path: "https://preshblog.vercel.app/", external: true },
   ];
   return (
     <div className="fixed left-0 md:left-6 top-0 z-50 h-screen flex flex-col items-center justify-between">
       <div className="w-0.5 h-24 dark:bg-resume bg-secondary"></div>
-      <ul className="h-80 gap-5 w-full dark:text-resume text-secondary flex flex-col justify-between items-center">
+      <ul className="h-80 gap-8 w-full dark:text-resume text-secondary flex flex-col justify-between items-center">
         {navItems.map((item, index) => (
           <li key={index} className="list-none -rotate-90">
             {item.external ? (
